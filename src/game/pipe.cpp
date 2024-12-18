@@ -45,9 +45,9 @@ bool pipes_check_collision(bird_t* bird) {
   return false;
 }
 
-void pipes_move(uint64_t elapsed_millis) {
+void pipes_move(float move_factor) {
   for (int i = 0; i < PIPE_COUNT; i++) {
-    pipes[i].x -= 2;
+    pipes[i].x -= 2.0 * move_factor;
     if (pipes[i].x < -pipes[i].sprite_top->width) {
       pipes[i].x += PIPE_INTERVAL * PIPE_COUNT;
       pipes[i].y = get_random_y_position();
