@@ -12,7 +12,6 @@ uint16_t get_random_y_position() {
 }
 
 void pipes_create() {
-  Serial.println("Creating pipes");
   for (int i = 0; i < PIPE_COUNT; i++) {
     pipes[i].x = PIPE_INTERVAL * i + VGA_WIDTH;
     pipes[i].y = get_random_y_position();

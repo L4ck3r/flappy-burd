@@ -7,18 +7,34 @@
 WiFiServer server(80);
 
 void controls_setup(void (*loading_func)()) {
-  if (!WIFI_CREATE_ACCESS_POINT) {
+  Serial.println();
+  if (WIFI_CREATE_ACCESS_POINT) {
+    Serial.println("Creating access point...");
+    Serial.printf("  SSID: %s\n", WIFI_SSID);
+    Serial.printf("  Password: %s\n", WIFI_PASSWORD);
+    WiFi.softAPConfig(WIFI_IP, WIFI_IP, WIFI_SUBNET);
+    if(WiFi.softAP(WIFI_SSID, WIFI_PASSWORD)) {
+      Serial.println("Access point created.");
+    } else {
+      Serial.println("Failed to create access point.");
+    }
+    Serial.print("IP address: ");
+    Serial.println(WiFi.softAPIP());
+  } else {
+    Serial.printf("Connecting to \"%s\"...\n", WIFI_SSID);
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  }
 
-  while (WiFi.status() != WL_CONNECTED) {
-    loading_func();
+    uint64_t last_dot = 0;
+    while (WiFi.status() != WL_CONNECTED) {
+      loading_func();
+
+      if (millis() - last_dot > 1000) {
+        Serial.print(".");
+        last_dot = millis();
+      }
+    }
   }
-  
-  Serial.print(".");
-  Serial.println("");
-  Serial.println("WiFi connected.");
-  Serial.printf("IP address: %s\n", WiFi.localIP().toString().c_str());
+  Serial.println();
 
   server.begin();
 }

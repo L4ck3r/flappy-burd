@@ -15,8 +15,10 @@
 #define PIPE_MIN_DISTANCE 40
 #define PIPE_HEIGHT 60
 
-#define WIFI_CREATE_ACCESS_POINT false
-#define WIFI_SSID ""
-#define WIFI_PASSWORD ""
+#define WIFI_CREATE_ACCESS_POINT true
+#define WIFI_SSID "FlappyBird"
+#define WIFI_PASSWORD "12345678"
+#define WIFI_IP IPAddress(192, 168, 1, 1)
+#define WIFI_SUBNET IPAddress(255, 255, 255, 0)
 
 // #define DEBUG
