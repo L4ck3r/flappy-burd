@@ -7,7 +7,7 @@
 #include "game/wifi_controls.h"
 #include "video/sprites.h"
 #include "video/vga.h"
-//test
+
 VGA3Bit display;
 
 game_t game;
