@@ -12,22 +12,22 @@ void game_reset(game_t *game, bird_t *bird) {
   game->score = 0;
 }
 
-void game_flap(bird_t *bird) {
+void game_flap(bird_t *bird, float move_factor) {
   bird->flap_active = true;
   bird->flap_activated_at = millis();
-  bird->y_speed = -5;
+  bird->y_speed = -5.0 * move_factor;
 }
 
-void game_tick(game_t *game, bird_t *bird) {
-  pipes_move(1);
+void game_tick(game_t *game, bird_t *bird, float move_factor) {
+  pipes_move(move_factor);
 
-  bird->y_speed += 0.5;
-  bird->y_speed = fmin(bird->y_speed, 6);
+  bird->y_speed += 0.5 * move_factor;
+  bird->y_speed = fmin(bird->y_speed, 6 * move_factor);
   bird->y += bird->y_speed;
 
   bird->y = fmax(bird->y, 0);
   bird->y = fmin(bird->y, VGA_HEIGHT - bird->sprite->height);
-  game->score++;
+  game->score += move_factor;
   if (millis() - bird->flap_activated_at > 200) {
     bird->flap_active = false;
   }
