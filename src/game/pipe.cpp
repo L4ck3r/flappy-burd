@@ -1,65 +1,34 @@
-#include "pipe.h"
+#include "game.h"
 
 #include "config.h"
+#include "pipe.h"
 
-#include "video/sprites.h"
-
-pipe_t pipes[PIPE_COUNT];
-
-uint16_t get_random_y_position() {
-  return random(PIPE_MIN_DISTANCE,
-                VGA_HEIGHT - PIPE_MIN_DISTANCE - PIPE_HEIGHT);
+void game_reset(game_t *game, bird_t *bird) {
+  pipes_create();
+  bird->x = 50;
+  bird->sprite = &sprite_bird;
+  bird->y = 0;
+  bird->y_speed = 0;
+  game->score = 0;
 }
 
-void pipes_create() {
-  for (int i = 0; i < PIPE_COUNT; i++) {
-    pipes[i].x = PIPE_INTERVAL * i + VGA_WIDTH;
-    pipes[i].y = get_random_y_position();
-    pipes[i].height = PIPE_HEIGHT;
-    pipes[i].sprite_top = &sprite_pipe_top;
-    pipes[i].sprite_bottom = &sprite_pipe_bottom;
-  }
+void game_flap(bird_t *bird, float move_factor) {
+  bird->flap_active = true;
+  bird->flap_activated_at = millis();
+  bird->y_speed = -5.0 * move_factor;
 }
 
-bool pipes_check_collision(bird_t* bird) {
-  for (int i = 0; i < PIPE_COUNT; i++) {
-    pipe_t pipe = pipes[i];
+void game_tick(game_t *game, bird_t *bird, float move_factor) {
+  pipes_move(move_factor);
 
-    if (pipe.x > bird->x + bird->sprite->width) {
-      continue;
-    }
+  bird->y_speed += 0.5 * move_factor;
+  bird->y_speed = fmin(bird->y_speed, 6 * move_factor);
+  bird->y += bird->y_speed;
 
-    if (pipe.x + pipe.sprite_top->width < bird->x) {
-      continue;
-    }
-
-    if(bird->x + bird->sprite->width < pipe.x ||
-        bird->x > pipe.x + pipe.sprite_top->width) {
-      continue;
-    }
-
-    if (bird->y < pipe.y || bird->y + bird->sprite->height > pipe.y + pipe.height) {
-      return true;
-    }
-  }
-  return false;
-}
-
-void pipes_move(uint64_t elapsed_millis) {
-  for (int i = 0; i < PIPE_COUNT; i++) {
-    pipes[i].x -= 2;
-    if (pipes[i].x < -pipes[i].sprite_top->width) {
-      pipes[i].x += PIPE_INTERVAL * PIPE_COUNT;
-      pipes[i].y = get_random_y_position();
-    }
-  }
-}
-
-void pipes_draw(VGA3Bit* display) {
-  for (int i = 0; i < PIPE_COUNT; i++) {
-    pipe_t pipe = pipes[i];
-    sprite_draw(display, pipe.sprite_top, pipe.x,
-                pipe.y - pipe.sprite_top->height);
-    sprite_draw(display, pipe.sprite_bottom, pipe.x, pipe.y + pipe.height);
+  bird->y = fmax(bird->y, 0);
+  bird->y = fmin(bird->y, VGA_HEIGHT - bird->sprite->height);
+  game->score += move_factor;
+  if (millis() - bird->flap_activated_at > 200) {
+    bird->flap_active = false;
   }
 }
