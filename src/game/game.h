@@ -5,7 +5,7 @@
 #include "video/sprites.h"
 
 typedef struct {
-  uint64_t score;
+  double score;
 } game_t;
 
 typedef struct {
@@ -18,5 +18,5 @@ typedef struct {
 } bird_t;
 
 void game_reset(game_t *game, bird_t *bird);
-void game_tick(game_t *game, bird_t *bird);
-void game_flap(bird_t *bird);
+void game_tick(game_t *game, bird_t *bird, float move_factor);
+void game_flap(bird_t *bird, float move_factor);
