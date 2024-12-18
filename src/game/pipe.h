@@ -4,7 +4,7 @@
 #include "game/game.h"
 
 typedef struct {
-    int16_t x;
+    float x;
     uint16_t y;
     uint16_t height;
     const sprite_t* sprite_top;
@@ -14,5 +14,5 @@ typedef struct {
 void pipes_create();
 bool pipes_check_collision(bird_t* bird);
 
-void pipes_move(uint64_t elapsed_millis);
+void pipes_move(float move_factor);
 void pipes_draw(VGA3Bit* display);
