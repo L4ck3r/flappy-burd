@@ -66,7 +66,7 @@ void loop() {
   display.print("x");
   display.println(display.yres);
   display.print("FPS: ");
-  display.println(vga_get_fps());
+  display.println(game_fps);
 #endif
   display.print("Score: ");
   char buffer[10];
