@@ -33,15 +33,17 @@ void setup() {
 }
 
 void loop() {
+  uint8_t game_fps = vga_get_fps();
+  float move_factor = (float)NORMINAL_FPS / game_fps;
   if (controls_flap_active()) {
-    game_flap(&bird);
+    game_flap(&bird, move_factor);
   }
-  game_tick(&game, &bird);
-  if (pipes_check_collision(&bird)) {
+  game_tick(&game, &bird, move_factor);
 #ifndef DEBUG
+  if (pipes_check_collision(&bird)) {
     game_reset(&game, &bird);
-#endif
   }
+#endif
 
   display.fillRect(0, 0, VGA_WIDTH, VGA_HEIGHT, display.RGB(0, 255, 255));
 
