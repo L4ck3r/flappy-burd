@@ -16,7 +16,7 @@
 #define PIPE_HEIGHT 60
 
 #define WIFI_CREATE_ACCESS_POINT false
-#define WIFI_SSID "Biertheke"
-#define WIFI_PASSWORD "Turbine2022"
+#define WIFI_SSID ""
+#define WIFI_PASSWORD ""
 
-#define DEBUG
+// #define DEBUG
